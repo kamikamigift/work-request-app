@@ -318,13 +318,20 @@ function validate(){
   return true;
 }
 
+// スマホ判定（iPadOSがMacを名乗るケースも拾う）
+const IS_MOBILE=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Macintosh/i.test(navigator.userAgent));
 function sendGmail(){
   if(!validate())return;
   const to=encodeURIComponent($('toAddr').value.trim());
   const su=encodeURIComponent(buildSubject());
   const body=encodeURIComponent(buildBody());
-  const url=`https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${su}&body=${body}`;
-  window.open(url,'_blank');
+  if(IS_MOBILE){
+    // スマホ：既定のメールアプリ（Gmail等）を、宛先・件名・本文すべて入った状態で開く
+    location.href=`mailto:${to}?subject=${su}&body=${body}`;
+  }else{
+    // パソコン：ブラウザのGmail作成画面を内容入りで開く
+    window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${su}&body=${body}`,'_blank');
+  }
 }
 function sendMailto(){
   if(!validate())return;
