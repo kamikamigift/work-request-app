@@ -236,7 +236,8 @@ body{font-family:'Inter','Noto Sans JP',-apple-system,BlinkMacSystemFont,sans-se
 <!-- 送信バー -->
 <div class="sendbar">
   <div class="sendbar-inner">
-    <button class="btn btn-ghost" onclick="clearForm()" title="入力を消して新しい依頼を作成">🆕 新規</button>
+    <button class="btn btn-ghost" onclick="clearForm()" title="入力を消して新しい依頼を作成">🆕</button>
+    <button class="btn btn-ghost" onclick="doCopy()" title="本文をコピー（LINE等に貼れます）">📋</button>
     <button class="btn btn-primary" onclick="sendGmail()">📧 Gmailで送る</button>
   </div>
 </div>
@@ -412,8 +413,7 @@ function buildBody(){
 }
 function buildSubject(){
   const who=$('requester').value.trim();
-  const head=($('content').value.trim().split('\n')[0]||'').slice(0,20);
-  return '仕事依頼'+(who?'（'+who+'）':'')+(head?'：'+head:'');
+  return '仕事依頼'+(who?'（'+who+'）':'');
 }
 function validate(){
   if(!$('requester').value.trim()){showToast('依頼者のお名前を入れてください');$('requester').focus();return false}
@@ -430,7 +430,8 @@ function sendGmail(){
   addHistory(); // 送信操作の控えを端末に残す
   const to=encodeURIComponent($('toAddr').value.trim());
   const su=encodeURIComponent(buildSubject());
-  const body=encodeURIComponent(buildBody());
+  // メールの改行はCRLFにする（LFだけだとiPhoneのGmail等で改行が消えて詰まって見えるため）
+  const body=encodeURIComponent(buildBody().replace(/\r?\n/g,'\r\n'));
   if(IS_MOBILE){
     // スマホ：既定のメールアプリ（Gmail等）を、宛先・件名・本文すべて入った状態で開く
     location.href=`mailto:${to}?subject=${su}&body=${body}`;
