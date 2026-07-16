@@ -123,7 +123,7 @@ body{font-family:'Inter','Noto Sans JP',-apple-system,BlinkMacSystemFont,sans-se
     </div>
     <div class="row" style="margin-top:16px">
       <div class="field"><label class="flabel">依頼者<span class="req">必須</span></label><input type="text" class="inp" id="requester" placeholder="お名前"></div>
-      <div class="field"><label class="flabel">実行者</label><input type="text" class="inp" id="doer" placeholder="シウン"></div>
+      <div class="field"><label class="flabel">実行者</label><input type="text" class="inp" id="doer" placeholder="シウン" value="シウン"></div>
     </div>
     <div class="field" style="margin-top:16px"><label class="flabel">依頼場所</label><input type="text" class="inp" id="place" placeholder="例：事務所 / オンライン"></div>
     <div class="field" style="margin-top:16px">
@@ -212,7 +212,6 @@ body{font-family:'Inter','Noto Sans JP',-apple-system,BlinkMacSystemFont,sans-se
   <div class="sendbar-inner">
     <button class="btn btn-ghost" onclick="doCopy()" title="本文をコピー">📋</button>
     <button class="btn btn-primary" onclick="sendGmail()">📧 Gmailで送る</button>
-    <button class="btn btn-ghost" onclick="sendMailto()" title="メールソフトで開く">✉️</button>
   </div>
 </div>
 
