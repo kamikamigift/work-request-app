@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="仕事依頼書">
+<meta name="theme-color" content="#0071E3">
+<title>仕事依頼書</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F5F5F7;--surface:#FFFFFF;--surface2:#F5F5F7;--surface3:#E8E8ED;
+  --border:#E8E8ED;--border2:#D2D2D7;
+  --text1:#1D1D1F;--text2:#515154;--text3:#86868B;
+  --accent:#0071E3;--accent2:#0077ED;--accent-bg:#F0F7FF;
+  --rec:#FF3B30;
+  --radius:18px;--radius-sm:12px;
+  --shadow-sm:0 1px 4px rgba(0,0,0,.04);
+  --shadow:0 2px 12px rgba(0,0,0,.06);
+  --shadow-md:0 8px 32px rgba(0,0,0,.10);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter','Noto Sans JP',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:120px}
+
+/* Header */
+.header{background:linear-gradient(135deg,#0071E3,#3395F0);padding:0 max(20px,calc((100vw - 720px)/2));height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 10px rgba(0,90,180,.28)}
+.logo{font-size:20px;font-weight:700;color:#fff;letter-spacing:-.022em;display:flex;align-items:center;gap:9px}
+.logo-sub{font-size:11px;color:rgba(255,255,255,.75);letter-spacing:.06em;font-weight:500}
+
+.wrap{max-width:720px;margin:0 auto;padding:28px max(20px,calc((100vw - 720px)/2)) 40px}
+
+/* Cards */
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:22px 22px 24px;margin-bottom:18px}
+.card-title{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.02em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title .num{background:var(--accent);color:#fff;width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+
+/* Fields */
+.field{margin-bottom:16px}
+.field:last-child{margin-bottom:0}
+.flabel{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:7px;display:block}
+.req{color:var(--rec);font-size:11px;margin-left:4px;font-weight:600}
+.inp,.ta{width:100%;border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:12px 14px;font-size:16px;font-family:inherit;color:var(--text1);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s}
+.inp:focus,.ta:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,113,227,.14)}
+.ta{resize:vertical;min-height:96px;line-height:1.7}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row .field{flex:1;min-width:150px;margin-bottom:0}
+
+/* voice field wrapper */
+.voice-wrap{position:relative}
+.mic{position:absolute;right:8px;bottom:8px;width:42px;height:42px;border-radius:50%;border:none;background:var(--accent-bg);color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .12s;box-shadow:var(--shadow-sm)}
+.mic:hover{background:#E1EFFF}
+.mic:active{transform:scale(.92)}
+.mic.rec{background:var(--rec);color:#fff;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,59,48,.45)}50%{box-shadow:0 0 0 10px rgba(255,59,48,0)}}
+.mic svg{width:20px;height:20px}
+.mic-hint{position:absolute;right:58px;bottom:16px;font-size:12px;color:var(--rec);font-weight:600;background:#fff;padding:2px 8px;border-radius:20px;box-shadow:var(--shadow-sm);display:none;white-space:nowrap}
+.mic.rec ~ .mic-hint{display:block}
+
+/* checkbox / radio pills */
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{position:relative;cursor:pointer}
+.pill input{position:absolute;opacity:0;pointer-events:none}
+.pill span{display:inline-flex;align-items:center;gap:5px;padding:9px 16px;border:1.5px solid var(--border2);border-radius:980px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s;user-select:none}
+.pill input:checked + span{background:var(--accent);border-color:var(--accent);color:#fff}
+.pill input:focus-visible + span{box-shadow:0 0 0 3px rgba(0,113,227,.25)}
+
+.subcard{background:var(--surface2);border-radius:var(--radius-sm);padding:14px 16px;margin-top:6px}
+.subrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.subrow:last-child{margin-bottom:0}
+.subrow .sublabel{font-size:13px;font-weight:600;color:var(--text2);min-width:76px}
+.inp-sm{border:1.5px solid var(--border2);border-radius:9px;padding:8px 10px;font-size:15px;font-family:inherit;background:var(--surface);outline:none;color:var(--text1)}
+.inp-sm:focus{border-color:var(--accent)}
+
+/* send bar */
+.sendbar{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--border);padding:14px max(20px,calc((100vw - 720px)/2)) calc(14px + env(safe-area-inset-bottom));z-index:90}
+.sendbar-inner{max-width:720px;margin:0 auto;display:flex;gap:10px}
+.btn{flex:1;height:52px;border:none;border-radius:14px;font-size:16px;font-family:inherit;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .16s,transform .1s}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-ghost{background:var(--surface3);color:var(--text1);flex:0 0 auto;padding:0 18px}
+.btn-ghost:hover{background:#DEDEE3}
+
+/* settings */
+.settings{margin-bottom:18px}
+.settings summary{cursor:pointer;font-size:13px;color:var(--text3);font-weight:500;list-style:none;display:flex;align-items:center;gap:6px;padding:4px 0}
+.settings summary::-webkit-details-marker{display:none}
+.settings[open] summary{margin-bottom:12px;color:var(--text2)}
+.help{font-size:12px;color:var(--text3);line-height:1.7;margin-top:8px}
+
+/* toast */
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);background:#1D1D1F;color:#fff;padding:12px 22px;border-radius:14px;font-size:14px;font-weight:500;box-shadow:var(--shadow-md);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:200;max-width:88vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.notice{background:#FFF8E6;border:1px solid #F5E4B3;border-radius:var(--radius-sm);padding:12px 14px;font-size:12.5px;color:#8A6D00;line-height:1.65;margin-bottom:18px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">📝 仕事依頼書<span class="logo-sub" style="margin-left:2px">WORK REQUEST</span></div>
+</div>
+
+<div class="wrap">
+
+  <div class="notice" id="voiceNotice" style="display:none">
+    ⚠️ このブラウザは音声入力に対応していないため、マイクボタンは表示されません。文字入力はそのままお使いいただけます。<br>
+    （音声入力を使うには <strong>Chrome</strong> か <strong>Safari</strong> でお開きください）
+  </div>
+
+  <!-- 基本情報 -->
+  <div class="card">
+    <div class="card-title">基本情報</div>
+    <div class="row">
+      <div class="field"><label class="flabel">依頼日</label><input type="date" class="inp" id="reqDate"></div>
+      <div class="field"><label class="flabel">希望期日</label><input type="date" class="inp" id="dueDate"></div>
+    </div>
+    <div class="row" style="margin-top:16px">
+      <div class="field"><label class="flabel">依頼者<span class="req">必須</span></label><input type="text" class="inp" id="requester" placeholder="お名前"></div>
+      <div class="field"><label class="flabel">実行者</label><input type="text" class="inp" id="doer" placeholder="シウン"></div>
+    </div>
+    <div class="field" style="margin-top:16px"><label class="flabel">依頼場所</label><input type="text" class="inp" id="place" placeholder="例：事務所 / オンライン"></div>
+    <div class="field" style="margin-top:16px">
+      <label class="flabel">やりとり方法</label>
+      <div class="pills" id="methodPills">
+        <label class="pill"><input type="checkbox" value="対面"><span>対面</span></label>
+        <label class="pill"><input type="checkbox" value="LINE"><span>LINE</span></label>
+        <label class="pill"><input type="checkbox" value="メール"><span>メール</span></label>
+        <label class="pill"><input type="checkbox" value="電話"><span>電話</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 依頼内容 -->
+  <div class="card">
+    <div class="card-title"><span class="num">1</span>依頼内容<span class="req">必須</span></div>
+    <div class="voice-wrap">
+      <textarea class="ta" id="content" placeholder="何をお願いしたいか（マイクで話しても入力できます）"></textarea>
+      <button class="mic" data-target="content" aria-label="音声入力"></button>
+      <div class="mic-hint">聞き取り中…</div>
+    </div>
+  </div>
+
+  <!-- 02 詳細 -->
+  <div class="card">
+    <div class="card-title"><span class="num">2</span>詳細</div>
+    <div class="voice-wrap">
+      <textarea class="ta" id="detail" placeholder="背景・条件・参考など（マイクで話しても入力できます）"></textarea>
+      <button class="mic" data-target="detail" aria-label="音声入力"></button>
+      <div class="mic-hint">聞き取り中…</div>
+    </div>
+  </div>
+
+  <!-- 03 スケジュール -->
+  <div class="card">
+    <div class="card-title"><span class="num">3</span>希望納期・スケジュール</div>
+    <div class="subcard">
+      <div class="subrow">
+        <span class="sublabel">希望納期</span>
+        <input type="date" class="inp-sm" id="deadlineDate">
+        <input type="time" class="inp-sm" id="deadlineTime"><span style="font-size:13px;color:var(--text2)">まで</span>
+      </div>
+      <div class="subrow">
+        <span class="sublabel">優先度</span>
+        <div class="pills">
+          <label class="pill"><input type="radio" name="prio" value="高（最優先）"><span>高（最優先）</span></label>
+          <label class="pill"><input type="radio" name="prio" value="中"><span>中</span></label>
+          <label class="pill"><input type="radio" name="prio" value="低"><span>低</span></label>
+        </div>
+      </div>
+      <div class="subrow">
+        <span class="sublabel">中間確認</span>
+        <div class="pills">
+          <label class="pill"><input type="radio" name="mid" value="なし" checked><span>なし</span></label>
+          <label class="pill"><input type="radio" name="mid" value="あり"><span>あり</span></label>
+        </div>
+        <input type="text" class="inp-sm" id="midWhen" placeholder="例：7月18日頃" style="flex:1;min-width:140px;display:none">
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 その他 -->
+  <div class="card">
+    <div class="card-title"><span class="num">4</span>その他連絡事項</div>
+    <div class="voice-wrap">
+      <textarea class="ta" id="other" placeholder="補足があれば（マイクで話しても入力できます）"></textarea>
+      <button class="mic" data-target="other" aria-label="音声入力"></button>
+      <div class="mic-hint">聞き取り中…</div>
+    </div>
+  </div>
+
+  <!-- 送信先設定 -->
+  <details class="settings card" style="padding:16px 22px">
+    <summary>⚙️ 送信先メールアドレスの設定</summary>
+    <div class="field">
+      <label class="flabel">この依頼書を届けるメールアドレス</label>
+      <input type="email" class="inp" id="toAddr" placeholder="you@example.com">
+      <div class="help">ここに入れたアドレス宛に依頼書が届きます。一度入れると次回も自動で入ります（この端末に保存）。</div>
+    </div>
+  </details>
+
+</div>
+
+<!-- 送信バー -->
+<div class="sendbar">
+  <div class="sendbar-inner">
+    <button class="btn btn-ghost" onclick="doCopy()" title="本文をコピー">📋</button>
+    <button class="btn btn-primary" onclick="sendGmail()">📧 Gmailで送る</button>
+    <button class="btn btn-ghost" onclick="sendMailto()" title="メールソフトで開く">✉️</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const TO_KEY='wr_to_addr', REQ_KEY='wr_requester';
+
+// 日付の初期値（今日）
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+$('reqDate').value=todayStr();
+
+// 保存済み設定の復元
+$('toAddr').value=localStorage.getItem(TO_KEY)||'kamikamigift@gmail.com';
+$('requester').value=localStorage.getItem(REQ_KEY)||'';
+$('toAddr').addEventListener('change',()=>localStorage.setItem(TO_KEY,$('toAddr').value.trim()));
+$('requester').addEventListener('change',()=>localStorage.setItem(REQ_KEY,$('requester').value.trim()));
+
+// 中間確認「あり」で入力欄を出す
+document.querySelectorAll('input[name=mid]').forEach(r=>r.addEventListener('change',()=>{
+  $('midWhen').style.display=(document.querySelector('input[name=mid]:checked').value==='あり')?'block':'none';
+}));
+
+// ── 曜日つき日付表示 ──
+const WD=['日','月','火','水','木','金','土'];
+function fmtDate(v){if(!v)return'';const d=new Date(v+'T00:00:00');if(isNaN(d))return v;return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${WD[d.getDay()]}）`}
+
+// ── 音声入力（Web Speech API）──
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){
+  $('voiceNotice').style.display='block';
+  document.querySelectorAll('.mic').forEach(b=>b.style.display='none');
+}else{
+  const MIC_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
+  const STOP_SVG='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>';
+  document.querySelectorAll('.mic').forEach(b=>b.innerHTML=MIC_SVG);
+  let rec=null,activeBtn=null;
+  function stopRec(){if(rec){try{rec.stop()}catch(e){}}}
+  document.querySelectorAll('.mic').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(activeBtn===btn){stopRec();return}
+      if(rec){stopRec()}
+      const ta=$(btn.dataset.target);
+      rec=new SR();rec.lang='ja-JP';rec.interimResults=true;rec.continuous=true;
+      let base=ta.value;
+      activeBtn=btn;btn.classList.add('rec');btn.innerHTML=STOP_SVG;
+      rec.onresult=e=>{
+        let fin='',itm='';
+        for(let i=e.resultIndex;i<e.results.length;i++){
+          const t=e.results[i][0].transcript;
+          if(e.results[i].isFinal)fin+=t;else itm+=t;
+        }
+        if(fin){base=(base?base+(/[\s、。」）]$/.test(base)?'':'')+fin:fin)}
+        ta.value=base+itm;
+      };
+      rec.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed')showToast('マイクの使用が許可されていません');};
+      rec.onend=()=>{btn.classList.remove('rec');btn.innerHTML=MIC_SVG;if(activeBtn===btn)activeBtn=null;rec=null};
+      try{rec.start()}catch(e){showToast('音声入力を開始できませんでした')}
+    });
+  });
+}
+
+// ── 本文組み立て ──
+function getMethods(){return[...document.querySelectorAll('#methodPills input:checked')].map(c=>c.value).join(' / ')}
+function getPrio(){const r=document.querySelector('input[name=prio]:checked');return r?r.value:''}
+function getMid(){
+  const v=document.querySelector('input[name=mid]:checked').value;
+  if(v==='あり'){const w=$('midWhen').value.trim();return 'あり'+(w?`（${w}に進捗確認）`:'')}
+  return 'なし';
+}
+function buildBody(){
+  const L=[];
+  L.push('【仕事依頼書】');L.push('');
+  L.push('■ 依頼日：'+fmtDate($('reqDate').value));
+  if($('dueDate').value)L.push('■ 希望期日：'+fmtDate($('dueDate').value));
+  L.push('■ 依頼者：'+($('requester').value.trim()||'（未記入）'));
+  if($('place').value.trim())L.push('■ 依頼場所：'+$('place').value.trim());
+  if(getMethods())L.push('■ やりとり方法：'+getMethods());
+  if($('doer').value.trim())L.push('■ 実行者：'+$('doer').value.trim());
+  L.push('');
+  L.push('━━━ 01. 依頼内容 ━━━');
+  L.push($('content').value.trim()||'（未記入）');
+  L.push('');
+  if($('detail').value.trim()){L.push('━━━ 02. 詳細 ━━━');L.push($('detail').value.trim());L.push('')}
+  L.push('━━━ 03. 希望納期・スケジュール ━━━');
+  const dl=$('deadlineDate').value, tm=$('deadlineTime').value;
+  if(dl||tm)L.push('希望納期：'+fmtDate(dl)+(tm?' '+tm:'')+'まで');
+  if(getPrio())L.push('優先度：'+getPrio());
+  L.push('中間確認：'+getMid());
+  L.push('');
+  if($('other').value.trim()){L.push('━━━ 04. その他連絡事項 ━━━');L.push($('other').value.trim());L.push('')}
+  return L.join('\n');
+}
+function buildSubject(){
+  const who=$('requester').value.trim();
+  const head=($('content').value.trim().split('\n')[0]||'').slice(0,20);
+  return '仕事依頼'+(who?'（'+who+'）':'')+(head?'：'+head:'');
+}
+function validate(){
+  if(!$('requester').value.trim()){showToast('依頼者のお名前を入れてください');$('requester').focus();return false}
+  if(!$('content').value.trim()){showToast('依頼内容を入れてください');$('content').focus();return false}
+  if(!$('toAddr').value.trim()){showToast('送信先アドレスを設定してください（⚙️）');return false}
+  return true;
+}
+
+function sendGmail(){
+  if(!validate())return;
+  const to=encodeURIComponent($('toAddr').value.trim());
+  const su=encodeURIComponent(buildSubject());
+  const body=encodeURIComponent(buildBody());
+  const url=`https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${su}&body=${body}`;
+  window.open(url,'_blank');
+}
+function sendMailto(){
+  if(!validate())return;
+  const to=encodeURIComponent($('toAddr').value.trim());
+  const su=encodeURIComponent(buildSubject());
+  const body=encodeURIComponent(buildBody());
+  location.href=`mailto:${to}?subject=${su}&body=${body}`;
+}
+function doCopy(){
+  if(!validate())return;
+  navigator.clipboard.writeText(buildBody()).then(()=>showToast('本文をコピーしました')).catch(()=>showToast('コピーできませんでした'));
+}
+
+// toast
+let toastT;
+function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600)}
+</script>
+</body>
+</html>
