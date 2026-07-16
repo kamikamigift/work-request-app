@@ -215,7 +215,7 @@ body{font-family:'Inter','Noto Sans JP',-apple-system,BlinkMacSystemFont,sans-se
           <label class="pill"><input type="radio" name="mid" value="なし" checked><span>なし</span></label>
           <label class="pill"><input type="radio" name="mid" value="あり"><span>あり</span></label>
         </div>
-        <input type="text" class="inp-sm" id="midWhen" placeholder="例：7月18日頃" style="flex:1;min-width:140px;display:none">
+        <input type="date" class="inp-sm" id="midWhen" style="display:none"><span id="midWhenSuffix" style="font-size:13px;color:var(--text2);display:none">頃に確認</span>
       </div>
     </div>
   </div>
@@ -291,7 +291,9 @@ function fmtDate(v){if(!v)return'';const d=new Date(v+'T00:00:00');if(isNaN(d))r
 // ── 入力欄の出し分け（中間確認あり／メール・電話）──
 function applyToggles(){
   const midEl=document.querySelector('input[name=mid]:checked');
-  $('midWhen').style.display=(midEl&&midEl.value==='あり')?'block':'none';
+  const showMid=(midEl&&midEl.value==='あり');
+  $('midWhen').style.display=showMid?'inline-block':'none';
+  $('midWhenSuffix').style.display=showMid?'inline':'none';
   const m=[...document.querySelectorAll('#methodPills input:checked')].map(c=>c.value);
   $('methodEmail').style.display=m.includes('メール')?'block':'none';
   $('methodPhone').style.display=m.includes('電話')?'block':'none';
@@ -409,7 +411,7 @@ function getMethods(){
 function getPrio(){const r=document.querySelector('input[name=prio]:checked');return r?r.value:''}
 function getMid(){
   const el=document.querySelector('input[name=mid]:checked');
-  if(el&&el.value==='あり'){const w=$('midWhen').value.trim();return 'あり'+(w?`（${w}に進捗確認）`:'')}
+  if(el&&el.value==='あり'){const w=$('midWhen').value;return 'あり'+(w?`（${fmtDate(w)}頃に進捗確認）`:'')}
   return 'なし';
 }
 function buildBody(){
