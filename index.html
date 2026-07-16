@@ -89,6 +89,7 @@ body{font-family:'Inter','Noto Sans JP',-apple-system,BlinkMacSystemFont,sans-se
 .btn-primary:hover{background:var(--accent2)}
 .btn-ghost{background:var(--surface3);color:var(--text1);flex:0 0 auto;padding:0 16px;font-size:14px}
 .btn-ghost:hover{background:#DEDEE3}
+.btn-ghost.copied{background:#E3F7E8;color:#1a7f37}
 
 /* settings */
 .settings{margin-bottom:18px}
@@ -245,8 +246,8 @@ body{font-family:'Inter','Noto Sans JP',-apple-system,BlinkMacSystemFont,sans-se
 <!-- 送信バー -->
 <div class="sendbar">
   <div class="sendbar-inner">
-    <button class="btn btn-ghost" onclick="doCopy()" title="本文をコピー（LINE等に貼れます）">📋</button>
-    <button class="btn btn-primary" onclick="openPreview()">📧 メールで送る</button>
+    <button class="btn btn-ghost" id="copyBtn" onclick="doCopy()" title="本文をコピー（LINE等に貼れます）">📋</button>
+    <button class="btn btn-primary" onclick="openPreview()">📧 メール</button>
   </div>
 </div>
 
@@ -487,6 +488,32 @@ function clearFormSilent(){
   document.querySelector('input[name=mid][value="なし"]').checked=true;
   $('reqDate').value=todayStr();
   applyToggles(); saveDraft();
+}
+
+// ── コピー（LINE等に貼り付け用）──
+function doCopy(){
+  if(!validate())return;
+  const text=buildBody();
+  const ok=()=>flashCopied();
+  const ng=()=>showToast('コピーできませんでした。本文を長押しでコピーしてください');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(ok,()=>{ fallbackCopy(text)?ok():ng() });
+  }else{
+    fallbackCopy(text)?ok():ng();
+  }
+}
+function fallbackCopy(text){
+  try{
+    const ta=document.createElement('textarea');
+    ta.value=text; ta.style.position='fixed'; ta.style.top='0'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    const r=document.execCommand('copy'); document.body.removeChild(ta); return r;
+  }catch(e){return false}
+}
+function flashCopied(){
+  const btn=$('copyBtn');
+  if(btn){btn.textContent='✅'; btn.classList.add('copied'); setTimeout(()=>{btn.textContent='📋'; btn.classList.remove('copied')},1600)}
+  showToast('✅ コピーしました！LINEなどに貼り付けできます');
 }
 
 // toast
