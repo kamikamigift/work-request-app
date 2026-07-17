@@ -340,7 +340,7 @@ function addHistory(){
 }
 function renderHistory(){
   const list=getHistory(), box=$('histList');
-  if(!list.length){box.innerHTML='<p class="hist-empty">まだ送信した依頼はありません。<br>「📧 Gmailで送る」を押すと、ここに控えが残ります。</p>';return}
+  if(!list.length){box.innerHTML='<p class="hist-empty">まだ送信した依頼はありません。<br>「📧 メール」を押すと、ここに控えが残ります。</p>';return}
   box.innerHTML=list.map(h=>{
     const d=new Date(h.sentAt);
     const dt=`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}（${WD[d.getDay()]}）${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
